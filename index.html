@@ -1,0 +1,102 @@
+<html>
+  <head>
+    <!-- Pull the engine from the Quintus CDN or load it locally -->
+    <!-- (use quintus-all.min.js for production) -->
+    <!-- <script src='http://cdn.html5quintus.com/v0.2.0/quintus-all.js'></script> -->
+    <link rel="stylesheet" href="estilo.css" />
+    <script src="lib/quintus.js"></script>
+    <script src="lib/quintus_2d.js"></script>
+    <script src="lib/quintus_anim.js"></script>
+    <script src="lib/quintus_audio.js"></script>
+    <script src="lib/quintus_input.js"></script>
+    <script src="lib/quintus_scenes.js"></script>
+    <script src="lib/quintus_sprites.js"></script>
+    <script src="lib/quintus_tmx.js"></script>
+    <script src="lib/quintus_touch.js"></script>
+    <script src="lib/quintus_ui.js"></script>
+    <!-- referenciado los modulos -->
+    <script src="scripts/barra-lateral.js"></script>
+    <script src="scripts/personaje.js"></script>
+    <script src="scripts/hongo.js"></script>
+    <script src="scripts/gameplay.js"></script>
+    <script src="scripts/enemigo.js"></script>
+    
+  </head>
+  <body>
+    <script>
+      // Now set up your game (most games will load a separate .js file)
+      var Q = Quintus() // Create a new engine instance
+        .include("Sprites, Scenes, 2D, UI, Touch, Anim")
+        .include("GamePlayUI, BarraLateralGUI, PersonajeGUI, Hongo, Enemigo")
+         // Load any needed modules
+        .setup({
+          width: 1080,
+          height: 720,
+        })
+        // .controls()
+        .touch(); // Add a canvas element onto the page
+
+      // para la gravedad
+      Q.gravityX = 0;
+      Q.gravityY = 0;
+
+      Q.SPRITE_MARIO = 30;
+      Q.SPRITE_PISO = 0;
+      Q.SPRITE_BALAS = 0;
+      Q.SPRITE_ENEMIGO = 40;
+      Q.SPRITE_HONGOS = 30;
+      //Acivar el touch
+      Q.touch(Q.SPRITE_HONGOS,Q.SPRITE_PISO);      
+ 
+      Q.scene("nivel1", function (stage) {
+    
+        var nvl1 = new Q.Nivel();
+        var enemigo = new Q.Enemigo({ w: 200, h: 200, x:  120, y: 300, vx: 30, vy: -60, ax:  0, ay: 10  });
+        //MIS HONGOS
+        var hongos = 1 + Math.random() * (10 - 6);
+       
+        //MIS PERSONAJES
+        var sprite2 = new Q.Mario(
+          Q._extend({ x: 800, y: 100 }, Q.tipoPersonaje["mario"])
+        );
+        var sprite3 = new Q.Mario(
+          Q._extend({ x: 800, y: 350 }, Q.tipoPersonaje["luigi"])
+        );
+        var sprite4 = new Q.Mario(
+          Q._extend({ x: 800, y: 550, }, Q.tipoPersonaje["princesa"])
+        );
+        var sprite5 = new Q.Mario(
+          Q._extend({ x:200, y: 450 }, Q.tipoPersonaje["dragon"])
+        );
+
+        stage.insert(nvl1);
+        stage.insert(sprite2);
+        stage.insert(sprite3);
+        stage.insert(sprite4);
+        stage.insert(sprite5);
+        stage.insert(enemigo);
+        // sprite2.play("fire_right");
+        
+        var barraLateral = new Q.BarraLateral();
+        stage.insert(barraLateral);
+      });
+      Q.load("bg.jpg, mario150.png, hongo.png, Luigi50x50.png, princesa100x100.png, dragon.png", function () {
+          // Q.compileSheets("bg.jpg");
+          Q.state.reset({cantidadHongo:120});
+          Q.stageScene("nivel1",0);
+          Q.stageScene("hongo",1);
+     
+          var hongo1 = new Q.Hongo();
+          var hongo2 = new Q.Hongo();
+          var hongo3 = new Q.Hongo();
+          var hongo4 = new Q.Hongo();
+        
+          Q.stage(1).insert(hongo1);
+          Q.stage(1).insert(hongo2);
+          Q.stage(1).insert(hongo3);
+          Q.stage(1).insert(hongo4);  
+        }
+      );
+    </script>
+  </body>
+</html>
